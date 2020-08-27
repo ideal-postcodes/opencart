@@ -1,0 +1,57 @@
+{
+  "name": "opencart",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ideal Postcodes OpenCart Extension",
+  "author": {
+    "name": "Ideal Postcodes",
+    "email": "support@ideal-postcodes.co.uk",
+    "url": "https://ideal-postcodes.co.uk"
+  },
+  "bugs": {
+    "url": "https://github.com/ideal-postcodes/opencart/issues",
+    "email": "support@ideal-postcodes.co.uk"
+  },
+  "homepage": "https://github.com/ideal-postcodes/opencart",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ideal-postcodes/opencart.git"
+  },
+  "scripts": {
+    "semantic-release": "semantic-release",
+    "start": "make bootstrap",
+    "build": "NODE_ENV=production rollup -c",
+    "watch": "rollup -cw",
+    "lint": "eslint lib/**/*.ts",
+    "test": "cypress run",
+    "test:all": "npm start && npm run test && make down"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/preset-env": "~7.10.4",
+    "@cablanchard/eslint-config": "~2.1.0",
+    "@cablanchard/semantic-release": "~1.3.1",
+    "@cablanchard/tsconfig": "~1.0.0",
+    "@google/semantic-release-replace-plugin": "^1.0.0",
+    "@ideal-postcodes/api-fixtures": "~1.1.0",
+    "@ideal-postcodes/api-typings": "~2.0.0",
+    "@ideal-postcodes/jsutil": "~3.0.1",
+    "@prettier/plugin-php": "~0.14.3",
+    "@prettier/plugin-xml": "~0.10.0",
+    "@rollup/plugin-commonjs": "~14.0.0",
+    "@rollup/plugin-node-resolve": "~8.4.0",
+    "@types/cypress": "~1.1.3",
+    "@types/mocha": "~8.0.0",
+    "@typescript-eslint/eslint-plugin": "~3.7.1",
+    "@typescript-eslint/parser": "~3.7.1",
+    "@wessberg/rollup-plugin-ts": "~1.2.34",
+    "core-js": "~3.6.5",
+    "cypress": "~4.11.0",
+    "eslint": "~7.5.0",
+    "prettier": "~2.0.5",
+    "rollup": "~2.23.0",
+    "rollup-plugin-terser": "~6.1.0",
+    "semantic-release": "~17.1.1",
+    "typescript": "~3.9.7"
+  }
+}

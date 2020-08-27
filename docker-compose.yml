@@ -1,0 +1,31 @@
+version: "3.0"
+services:
+  db:
+    image: mariadb
+    volumes:
+      - db-data:/var/lib/mysql/data
+    env_file:
+      - ./docker/.env
+    ports:
+      - 3306:3306
+  web:
+    build: .
+    ports:
+      - "3000:80"
+    links:
+      - db
+    env_file:
+      - ./docker/.env
+    volumes:
+      - "./src/upload/admin/controller/extension/module/ukaddresssearch.php:/var/www/html/admin/controller/extension/module/ukaddresssearch.php"
+      - "./src/upload/admin/language/en-gb/extension/module/ukaddresssearch.php:/var/www/html/admin/language/en-gb/extension/module/ukaddresssearch.php"
+      - "./src/upload/admin/view/template/extension/module/ukaddresssearch.twig:/var/www/html/admin/view/template/extension/module/ukaddresssearch.twig"
+      - "./src/upload/catalog/controller/extension/module/ukaddresssearch.php:/var/www/html/catalog/controller/extension/module/ukaddresssearch.php"
+      - "./src/upload/catalog/view/theme/default/template/extension/module/ukaddresssearch.twig:/var/www/html/catalog/view/theme/default/template/extension/module/ukaddresssearch.twig"
+      - "./src/upload/catalog/view/javascript/ideal-postcodes-autocomplete.min.js:/var/www/html/catalog/view/javascript/ideal-postcodes-autocomplete.min.js"
+      - "./src/upload/catalog/view/javascript/postcodes.min.js:/var/www/html/catalog/view/javascript/postcodes.min.js"
+      - "./src/upload/catalog/view/javascript/opencart.js:/var/www/html/catalog/view/javascript/opencart.js"
+      - "./src/upload/catalog/view/css/ideal-postcodes-autocomplete.css:/var/www/html/catalog/view/css/ideal-postcodes-autocomplete.css"
+      - "./src/upload/catalog/view/css/ideal-postcodes-lookup.css:/var/www/html/catalog/view/css/ideal-postcodes-lookup.css"
+volumes:
+  db-data:

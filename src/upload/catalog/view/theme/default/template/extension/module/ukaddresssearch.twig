@@ -1,0 +1,11 @@
+<script type="text/javascript">
+    window.idpcConfig = {};
+    Object.assign(window.idpcConfig, {{ idpcConfig|json_encode() }}, {
+        postcodeLookupOverride: {{ postcodeLookupOverride|raw }}
+    }, {
+        autocompleteOverride: {{ autocompleteOverride|raw }}
+    });
+</script>
+<script type="text/javascript" src="{{ absolutePath }}catalog/view/javascript/ideal-postcodes-autocomplete.min.js"></script>
+<script type="text/javascript" src="{{ absolutePath }}catalog/view/javascript/postcodes.min.js"></script>
+<script type="text/javascript" src="{{ absolutePath }}catalog/view/javascript/opencart.js"></script>
