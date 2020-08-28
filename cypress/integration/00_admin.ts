@@ -26,33 +26,38 @@ describe("Admin", () => {
   const apiKey = Cypress.env("API_KEY");
   let token: string|null;
 
-  after(() => activateExtension(token));
-
-  it("Can navigate to config page", () => {
-    // Login to admin page
+  before(() => {
     cy.visit("/admin");
     cy.get("#input-username").type("admin");
     cy.get("#input-password").type("password");
     cy.get("form").contains("Login").click({force:true});
     cy.url().should("include", "/admin/index.php?route=common/dashboard&user_token=");
+  });
+
+  beforeEach(() => {
     cy.window().then((win) => {
       const url = new URL(win.location.href);
       token = url.searchParams.get("user_token");
-      cy.visit(`/admin/index.php?route=marketplace/extension&user_token=${token}`);
-      cy.get("select[name=\"type\"]").select(`${baseUrl}/admin/index.php?route=extension/extension/module&user_token=${token}`);
-      cy.wait(1000);
-      cy.get(`a[href="${baseUrl}/admin/index.php?route=extension/extension/module/install&user_token=${token}&extension=ukaddresssearch"]`).click();
-      cy.wait(1000);
-      cy.get(`a[href="${baseUrl}/admin/index.php?route=extension/module/ukaddresssearch&user_token=${token}"]`).click();
-      // fill configuration data
-      cy.get(`select[name="idealpostcodes_enabled"]`).select("1");
-      cy.get(`input[name="idealpostcodes_api_key"]`)
-          .clear({ force: true })
-          .type(apiKey, { force: true });
-
-      cy.get(`button[data-original-title="Save"]`).click({force: true});
-      cy.wait(1000);
-      cy.get('div.alert.alert-success').contains("Success: You have modified IdealPostcodes UK Address Search module!");
     });
+  })
+
+  after(() => activateExtension(token));
+
+  it("Can navigate to config page", () => {
+    cy.visit(`/admin/index.php?route=marketplace/extension&user_token=${token}`);
+    cy.get("select[name=\"type\"]").select(`${baseUrl}/admin/index.php?route=extension/extension/module&user_token=${token}`);
+    cy.wait(2000);
+    cy.get(`a[href="${baseUrl}/admin/index.php?route=extension/extension/module/install&user_token=${token}&extension=ukaddresssearch"]`).click();
+    cy.wait(2000);
+    cy.get(`a[href="${baseUrl}/admin/index.php?route=extension/module/ukaddresssearch&user_token=${token}"]`).click();
+    // fill configuration data
+    cy.get(`select[name="idealpostcodes_enabled"]`).select("1");
+    cy.get(`input[name="idealpostcodes_api_key"]`)
+        .clear({ force: true })
+        .type(apiKey, { force: true });
+
+    cy.get(`button[data-original-title="Save"]`).click({force: true});
+    cy.wait(2000);
+    cy.get('div.alert.alert-success').contains("Success: Ideal Postcodes Address Validation module updated");
   });
 });
