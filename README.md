@@ -8,6 +8,8 @@ This extension enables [Ideal-Postcodes.co.uk](https://ideal-postcodes.co.uk) ad
 
 Tested on OpenCart 3.0.3.x
 
+![CI](https://github.com/ideal-postcodes/opencart/workflows/CI/badge.svg)
+
 See our [guide](https://ideal-postcodes.co.uk/guides/opencart) for installation and configuration instructions.
 
 [Get in contact](https://ideal-postcodes.co.uk/support) if you need assistance or have questions. Raise an issue for bugs or feature requests.
