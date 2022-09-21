@@ -20,7 +20,7 @@ const suite = {
 };
 
 describe("Checkout", () => {
-  before(() => {
+  beforeEach(() => {
     // Add product and visit checkout
     cy.visit("/index.php?route=product/product&product_id=43");
     cy.get("button").contains("Add to Cart").click();

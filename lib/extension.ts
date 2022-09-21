@@ -1,26 +1,23 @@
-declare global {
-  interface Window {
-    IdealPostcodes: any;
-    jQuery: any;
-    idpcStart: any;
-  }
-}
-
 import {
   Config,
-  Targets,
+  OutputFields,
   insertBefore,
   isSelect,
   change,
   toCountry,
-  addressRetrieval,
-  UkCountry,
+  //addressRetrieval,
+  toElem,
   CountryIso,
   Country,
+  hide,
+  show,
+    getParent
 } from "@ideal-postcodes/jsutil";
+import { AddressFinder } from "@ideal-postcodes/address-finder";
+import { watch } from "@ideal-postcodes/postcode-lookup";
 import { Address } from "@ideal-postcodes/api-typings";
 
-type SupportedCountry = UkCountry | CountryIso | Country;
+type SupportedCountry = CountryIso | Country;
 
 const SUPPORTED_COUNTRIES: SupportedCountry[] = [
   "England",
@@ -68,9 +65,10 @@ export const attachAutocomplete = (instance: any) => {
   instance.interface.initialiseEventListeners();
 };
 
-export const insertPostcodeField = (targets: Targets): HTMLElement | null => {
-  if (targets.line_1 === null) return null;
-  const target = targets.line_1.parentElement;
+export const insertPostcodeField = (targets: OutputFields): HTMLElement | null => {
+  const line_1 = toElem(targets.line_1 as string, document);
+  if (line_1 === null) return null;
+  const target = getParent(line_1, "div", (el) => el.classList.contains("form-group"));
   if (target === null) return null;
   const formGroup = document.createElement("div");
   formGroup.className = "form-group";
@@ -82,10 +80,11 @@ export const insertPostcodeField = (targets: Targets): HTMLElement | null => {
 };
 
 export const insertShippingPostcodeFields = (
-  targets: Targets
+  targets: OutputFields
 ): HTMLElement | null => {
-  if (targets.line_1 === null) return null;
-  const target = targets.line_1.parentElement?.parentElement;
+  const line_1 = toElem(targets.line_1 as string, document);
+  if (line_1 === null) return null;
+  const target = line_1.parentElement?.parentElement;
   if (!target) return null;
 
   const formGroup = document.createElement("div");
@@ -119,11 +118,12 @@ export const addLookupLabel = (
 const NOOP = () => {};
 
 export const watchCountry = (
-  { country }: Targets,
+  outputFields: OutputFields,
   activate: any,
   deactivate: any
 ) => {
-  if (!country) return NOOP;
+  const country = toElem(outputFields.country as string, document);
+  if (country === null) return NOOP;
   const checkCountry = () => {
     if (countryIsSupported(country as HTMLSelectElement)) return activate();
     deactivate();
@@ -134,85 +134,127 @@ export const watchCountry = (
 
 export const setupShippingPostcodeLookup = (
   config: Config,
-  targets: Targets
+  targets: OutputFields,
+  pageTest: any,
+  getScope: any
 ) => {
   if (config.postcodeLookup !== true) return;
-  const postcodeField = insertShippingPostcodeFields(targets);
-  if (postcodeField === null) return;
-  const controller = window.jQuery(postcodeField).setupPostcodeLookup({
-    api_key: config.apiKey,
-    input_class: "form-control",
-    button_class: "btn btn-primary idpc-button",
-    dropdown_class: "form-control",
-    check_key: true,
-    onLoaded: () => {
+  const bind = watch({
+    context: "div.idpc_lookup",
+    apiKey: config.apiKey,
+    inputClass: "form-control",
+    buttonClass: "btn btn-primary idpc-button",
+    selectClass: "form-control",
+    checkKey: true,
+    outputFields: targets,
+    inputStyle: {
+      marginBottom: "15px"
+    },
+    buttonStyle: {
+      marginBottom: "15px"
+    },
+    populateOrganisation: true,
+    removeOrganisation: false,
+    onLoaded () {
       setTimeout(() => {
         const label = addLookupLabel(
-          postcodeField.parentNode as HTMLElement,
+          this.context,
           "col-sm-2 control-label"
         );
         watchCountry(
           targets,
           () => {
             label.hidden = false;
-            controller.show();
+            bind.controller && show(bind.controller.context);
           },
           () => {
             label.hidden = true;
-            controller.hide();
+            bind.controller && hide(bind.controller.context);
           }
         )();
       }, 0);
     },
-    onAddressSelected: (address: Address) => {
-      addressRetrieval({ config, targets })(address);
-      updateCountry(address, targets.country);
-      setTimeout(() => updateCounty(address, targets.county), 1000);
+    onAddressSelected: (address: any) => {
+      setTimeout(() => {
+        updateCountry(address, toElem(targets.country as string, document));
+        updateCounty(address, toElem(targets.county as string, document));
+      }, 200);
     },
+  }, {
+    pageTest,
+    getScope,
+    onAnchorFound: (options) => {
+      const { scope } = options;
+      if(scope?.querySelector('.idpc_lookup[idpc="true"]')) return;
+      //@ts-ignore
+      options.config.context = insertShippingPostcodeFields(targets);
+    }
   });
 };
 
-export const setupPostcodeLookup = (config: Config, targets: Targets) => {
+export const setupPostcodeLookup = (config: Config, targets: OutputFields, pageTest: any, getScope: any) => {
   if (config.postcodeLookup !== true) return;
-  const postcodeField = insertPostcodeField(targets);
-  if (postcodeField === null) return;
-  const controller = window.jQuery(postcodeField).setupPostcodeLookup({
-    api_key: config.apiKey,
-    input_class: "form-control",
-    button_class: "btn btn-primary idpc-button",
-    dropdown_class: "form-control",
-    check_key: true,
-    onLoaded: () => {
+  const bind = watch({
+    context: "div.idpc_lookup",
+    apiKey: config.apiKey,
+    inputClass: "form-control",
+    buttonClass: "btn btn-primary idpc-button",
+    selectClass: "form-control",
+    checkKey: true,
+    outputFields: targets,
+    inputStyle: {
+      marginBottom: "15px"
+    },
+    buttonStyle: {
+      marginBottom: "15px"
+    },
+    populateOrganisation: true,
+    removeOrganisation: false,
+    onLoaded () {
       setTimeout(() => {
         // Add search label
-        const label = addLookupLabel(postcodeField);
+        const label = addLookupLabel(this.context);
         watchCountry(
           targets,
           () => {
             label.hidden = false;
-            controller.show();
+            bind.controller && show(bind.controller.context);
           },
           () => {
             label.hidden = true;
-            controller.hide();
+            bind.controller && hide(bind.controller.context);
           }
         )();
       }, 0);
     },
-    onAddressSelected: (address: Address) => {
-      addressRetrieval({ config, targets })(address);
-      updateCountry(address, targets.country);
-      setTimeout(() => updateCounty(address, targets.county), 1000);
+    onAddressSelected: (address: any) => {
+      setTimeout(() => {
+        updateCountry(address, toElem(targets.country as string, document));
+        updateCounty(address, toElem(targets.county as string, document));
+      }, 200);
     },
+  }, {
+    pageTest,
+    getScope,
+    //@ts-expect-error
+    anchor: targets.line_1,
+    onAnchorFound: (options) => {
+      const { scope } = options;
+      if(scope?.querySelector('.idpc_lookup[idpc="true"]')) return;
+      //@ts-ignore
+      options.config.context = insertPostcodeField(targets);
+    }
   });
 };
 
-export const setupAutocomplete = (config: Config, targets: Targets) => {
+export const setupAutocomplete = (config: Config, targets: OutputFields, pageTest: any, getScope: any) => {
   if (config.autocomplete !== true) return;
   if (targets.line_1 === null) return;
-  const controller = new window.IdealPostcodes.Autocomplete.Controller({
-    api_key: config.apiKey,
+  const controller = AddressFinder.watch({
+    apiKey: config.apiKey,
     checkKey: true,
+    populateOrganisation: true,
+    removeOrganisation: false,
     onLoaded: () => {
       watchCountry(
         targets,
@@ -220,18 +262,33 @@ export const setupAutocomplete = (config: Config, targets: Targets) => {
         () => detachAutocomplete(controller)
       )();
     },
-    inputField: targets.line_1,
-    onAddressRetrieved: (address: Address) => {
-      addressRetrieval({ config, targets })(address);
-      updateCountry(address, targets.country);
-      setTimeout(() => updateCounty(address, targets.county), 1000);
+    outputFields: targets,
+    onAddressRetrieved: (address: any) => {
+      setTimeout(() => {
+        updateCountry(address, toElem(targets.country as string, document));
+        updateCounty(address, toElem(targets.county as string, document));
+      }, 200);
     },
+  }, {
+    pageTest,
+    getScope,
+    marker: "idpc-af"
   });
 };
 
+
+const updateCountry = (address: Address, e: HTMLElement | null): void => {
+  if (!isSelect(e)) return;
+  // @ts-expect-error
+  const country = toCountry(address);
+  if (country === null) return;
+  const value = optionValueByText(e, country);
+  if (value) change({ e, value });
+};
+
 const optionValueByText = (
-  select: HTMLSelectElement,
-  text: string
+    select: HTMLSelectElement,
+    text: string
 ): string | null => {
   for (let i = 0; i < select.length; i += 1) {
     if (select.options[i].text.trim() === text) {
@@ -239,14 +296,6 @@ const optionValueByText = (
     }
   }
   return null;
-};
-
-const updateCountry = (address: Address, e: HTMLElement | null): void => {
-  if (!isSelect(e)) return;
-  const country = toCountry(address);
-  if (country === null) return;
-  const value = optionValueByText(e, country);
-  if (value) change({ e, value });
 };
 
 const updateCounty = (address: Address, select: HTMLElement | null) => {

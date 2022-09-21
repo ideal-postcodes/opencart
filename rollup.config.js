@@ -1,7 +1,8 @@
 import commonjs from "@rollup/plugin-commonjs";
-import { terser } from "rollup-plugin-terser";
-import resolve from "@rollup/plugin-node-resolve";
-import ts from "@wessberg/rollup-plugin-ts";
+//import { terser } from "rollup-plugin-terser";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import ts from "rollup-plugin-ts";
+import json from "@rollup/plugin-json";
 
 const banner = `/**
  * @license
@@ -29,9 +30,14 @@ export default [
       banner,
       format: "iife",
       exports: "named",
+      name: "IdealPostcodes"
     },
     plugins: [
-      resolve({ extensions: [".js", ".ts"] }),
+      json(),
+      nodeResolve({
+        extensions: [".js", ".ts"],
+        browser: true
+      }),
       commonjs(),
       ts({
         transpiler: "babel",
@@ -41,15 +47,13 @@ export default [
             [
               "@babel/preset-env",
               {
-                targets,
-                useBuiltIns: "usage",
-                corejs: 3,
+                targets
               },
             ],
           ],
         },
       }),
-      terser(terserConfig),
+      //terser(terserConfig),
     ],
   },
 ];

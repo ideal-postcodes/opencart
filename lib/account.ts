@@ -1,4 +1,4 @@
-import { setupBind, Binding, Config } from "@ideal-postcodes/jsutil";
+import { Config } from "@ideal-postcodes/jsutil";
 import { selectors as billingSelectors } from "./billing";
 import { setupAutocomplete, setupShippingPostcodeLookup } from "./extension";
 
@@ -7,15 +7,13 @@ const selectors = {
   line_1: "#input-address-1",
 };
 
-const bind = (config: Config) => {
-  setupBind({
-    selectors,
-  }).forEach(({ targets }) => {
-    setupAutocomplete(config, targets);
-    setupShippingPostcodeLookup(config, targets);
-  });
-};
+const getScope = undefined;
 
 export const pageTest = () => window.location.href.includes("/address");
 
-export const bindings: Binding = { bind, pageTest };
+const bind = (config: Config) => {
+  setupAutocomplete(config, selectors, pageTest, getScope);
+  setupShippingPostcodeLookup(config, selectors, pageTest, getScope);
+};
+
+export const bindings = { bind };
