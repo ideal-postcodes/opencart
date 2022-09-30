@@ -127,6 +127,7 @@ class ControllerExtensionModuleUkaddresssearch extends Controller
                 'idealpostcodes_populate_county' => 1,
                 'idealpostcodes_postcodelookup_override' => '{}',
                 'idealpostcodes_autocomplete_override' => '{}',
+                'idealpostcodes_custom_fields' => '[]'
             ],
         ]);
     }

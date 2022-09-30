@@ -416,14 +416,17 @@
   }
 
   function _iterableToArrayLimit(arr, i) {
-    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+    var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+
+    if (_i == null) return;
     var _arr = [];
     var _n = true;
     var _d = false;
-    var _e = undefined;
+
+    var _s, _e;
 
     try {
-      for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
         _arr.push(_s.value);
 
         if (i && _arr.length === i) break;
@@ -684,17 +687,11 @@
   function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function _typeof(obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function _typeof(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, _typeof(obj);
   }
 
   function _classCallCheck(instance, Constructor) {
@@ -716,6 +713,9 @@
   function _createClass(Constructor, protoProps, staticProps) {
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
+    Object.defineProperty(Constructor, "prototype", {
+      writable: false
+    });
     return Constructor;
   }
 
@@ -1431,11 +1431,10 @@
   }
 
   function _setPrototypeOf(o, p) {
-    _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) {
       o.__proto__ = p;
       return o;
     };
-
     return _setPrototypeOf(o, p);
   }
 
@@ -1451,19 +1450,24 @@
         configurable: true
       }
     });
+    Object.defineProperty(subClass, "prototype", {
+      writable: false
+    });
     if (superClass) _setPrototypeOf(subClass, superClass);
   }
 
   function _possibleConstructorReturn(self, call) {
     if (call && (_typeof(call) === "object" || typeof call === "function")) {
       return call;
+    } else if (call !== void 0) {
+      throw new TypeError("Derived constructors may only return object or undefined");
     }
 
     return _assertThisInitialized(self);
   }
 
   function _getPrototypeOf(o) {
-    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) {
       return o.__proto__ || Object.getPrototypeOf(o);
     };
     return _getPrototypeOf(o);
@@ -1488,7 +1492,7 @@
 
   function _construct(Parent, args, Class) {
     if (_isNativeReflectConstruct$2()) {
-      _construct = Reflect.construct;
+      _construct = Reflect.construct.bind();
     } else {
       _construct = function _construct(Parent, args, Class) {
         var a = [null];
@@ -2074,7 +2078,7 @@
 
   var axios$2 = {exports: {}};
 
-  var bind$5 = function bind(fn, thisArg) {
+  var bind$6 = function bind(fn, thisArg) {
     return function wrap() {
       var args = new Array(arguments.length);
 
@@ -2086,7 +2090,7 @@
     };
   };
 
-  var bind$4 = bind$5; // utils is a library of generic helper functions non-specific to axios
+  var bind$5 = bind$6; // utils is a library of generic helper functions non-specific to axios
 
   var toString = Object.prototype.toString;
   /**
@@ -2407,7 +2411,7 @@
   function extend(a, b, thisArg) {
     forEach(b, function assignValue(val, key) {
       if (thisArg && typeof val === 'function') {
-        a[key] = bind$4(val, thisArg);
+        a[key] = bind$5(val, thisArg);
       } else {
         a[key] = val;
       }
@@ -3774,7 +3778,7 @@
   };
 
   var utils = utils$d;
-  var bind$3 = bind$5;
+  var bind$4 = bind$6;
   var Axios = Axios_1;
   var mergeConfig = mergeConfig$2;
   var defaults$2 = defaults_1;
@@ -3787,7 +3791,7 @@
 
   function createInstance(defaultConfig) {
     var context = new Axios(defaultConfig);
-    var instance = bind$3(Axios.prototype.request, context); // Copy axios.prototype to instance
+    var instance = bind$4(Axios.prototype.request, context); // Copy axios.prototype to instance
 
     utils.extend(instance, Axios.prototype, context); // Copy context to instance
 
@@ -7944,17 +7948,17 @@
     });
   };
 
-  var pageTest$1 = function pageTest() {
+  var pageTest$2 = function pageTest() {
     return window.location.href.includes("/checkout");
   };
 
-  var bind$2 = function bind(config) {
-    setupAutocomplete(config, selectors$2, pageTest$1, getScope$2);
-    setupPostcodeLookup(config, selectors$2, pageTest$1, getScope$2);
+  var bind$3 = function bind(config) {
+    setupAutocomplete(config, selectors$2, pageTest$2, getScope$2);
+    setupPostcodeLookup(config, selectors$2, pageTest$2, getScope$2);
   };
 
-  var bindings$3 = {
-    bind: bind$2
+  var bindings$4 = {
+    bind: bind$3
   };
 
   function ownKeys$1(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -7971,13 +7975,13 @@
     });
   };
 
-  var bind$1 = function bind(config) {
-    setupAutocomplete(config, selectors$1, pageTest$1, getScope$1);
-    setupShippingPostcodeLookup(config, selectors$1, pageTest$1, getScope$1);
+  var bind$2 = function bind(config) {
+    setupAutocomplete(config, selectors$1, pageTest$2, getScope$1);
+    setupShippingPostcodeLookup(config, selectors$1, pageTest$2, getScope$1);
   };
 
-  var bindings$2 = {
-    bind: bind$1
+  var bindings$3 = {
+    bind: bind$2
   };
 
   function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -7989,20 +7993,36 @@
   });
 
   var getScope = undefined;
-  var pageTest = function pageTest() {
+  var pageTest$1 = function pageTest() {
     return window.location.href.includes("/address");
   };
 
+  var bind$1 = function bind(config) {
+    setupAutocomplete(config, selectors, pageTest$1, getScope);
+    setupShippingPostcodeLookup(config, selectors, pageTest$1, getScope);
+  };
+
+  var bindings$2 = {
+    bind: bind$1
+  };
+
+  var pageTest = function pageTest() {
+    return true;
+  };
+
   var bind = function bind(config) {
-    setupAutocomplete(config, selectors, pageTest, getScope);
-    setupShippingPostcodeLookup(config, selectors, pageTest, getScope);
+    var selectors = config.customFields || [];
+    selectors.forEach(function (selectors) {
+      setupAutocomplete(config, selectors, pageTest);
+      setupPostcodeLookup(config, selectors, pageTest);
+    });
   };
 
   var bindings$1 = {
     bind: bind
   };
 
-  var bindings = [bindings$3, bindings$2, bindings$1];
+  var bindings = [bindings$4, bindings$3, bindings$2, bindings$1];
   bindings.forEach(function (binding) {
     var conf = config();
     if (conf) binding.bind(conf);

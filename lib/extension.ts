@@ -136,7 +136,7 @@ export const setupShippingPostcodeLookup = (
   config: Config,
   targets: OutputFields,
   pageTest: any,
-  getScope: any
+  getScope?: any
 ) => {
   if (config.postcodeLookup !== true) return;
   const bind = watch({
@@ -192,7 +192,7 @@ export const setupShippingPostcodeLookup = (
   });
 };
 
-export const setupPostcodeLookup = (config: Config, targets: OutputFields, pageTest: any, getScope: any) => {
+export const setupPostcodeLookup = (config: Config, targets: OutputFields, pageTest: any, getScope?: any) => {
   if (config.postcodeLookup !== true) return;
   const bind = watch({
     context: "div.idpc_lookup",
@@ -247,7 +247,7 @@ export const setupPostcodeLookup = (config: Config, targets: OutputFields, pageT
   });
 };
 
-export const setupAutocomplete = (config: Config, targets: OutputFields, pageTest: any, getScope: any) => {
+export const setupAutocomplete = (config: Config, targets: OutputFields, pageTest: any, getScope?: any) => {
   if (config.autocomplete !== true) return;
   if (targets.line_1 === null) return;
   const controller = AddressFinder.watch({
