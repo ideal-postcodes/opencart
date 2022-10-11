@@ -7,6 +7,11 @@ interface Suite {
   address: Address;
 }
 
+const normalizeCity = (city: string): string => {
+  const lowerCase = city.toLowerCase();
+  return lowerCase.charAt(0).toUpperCase() + lowerCase.slice(1);
+}
+
 const assertions = (
   scope: JQuery<HTMLElement>,
   selectors: Selectors,
@@ -29,7 +34,7 @@ const assertions = (
     cy
       .get(selectors.organisation)
       .should("have.value", address.organisation_name);
-  cy.get(selectors.post_town).should("have.value", address.post_town);
+  cy.get(selectors.post_town).should("have.value", normalizeCity(address.post_town));
   cy.get(selectors.country).should("have.value", "257");
   cy.get(selectors.postcode).should("have.value", address.postcode);
 };
@@ -64,16 +69,16 @@ export const postcodeLookupSuite = (suite: Suite) => {
   it("Postcode Lookup", () => {
     cy.get(scope).within((scope) => {
       cy.get(selectors.country).select("222");
-      cy.get("#idpc_input")
+      cy.get(".idpc_lookup input.form-control")
         .clear({
           force: true,
         })
         .type(address.postcode, {
           force: true,
         });
-      cy.get("#idpc_button").click({ force: true });
+      cy.get(".idpc-button").click({ force: true });
       cy.wait(1000);
-      cy.get("#idpc_dropdown").select("0");
+      cy.get(".idpc-select-container select").select("0");
       assertions(scope, selectors, address);
     });
   });
