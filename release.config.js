@@ -4,19 +4,20 @@ module.exports = {
     // analyzeCommits: Determine the type of release by analyzing commits with conventional-changelog
     "@semantic-release/commit-analyzer",
 
-    // "@google/semantic-release-replace-plugin"
+    // "semantic-release-replace-plugin"
+    // "semantic-release-replace-plugin"
     // Replaces version number in readme.txt and uk-address-postcode-validation
     [
-      "@google/semantic-release-replace-plugin",
+      "semantic-release-replace-plugin",
       {
         replacements: [
           {
-            files: ["src/install.xml"],
-            from: "<version>.*</version>",
-            to: "<version>${nextRelease.version}</version>",
+            files: ["src/install.json"],
+            from: /"version"\s*:\s*".*"/,
+            to: "\"version\": \"${nextRelease.version}\"",
             results: [
               {
-                file: "src/install.xml",
+                file: "src/install.json",
                 hasChanged: true,
                 numMatches: 1,
                 numReplacements: 1,
@@ -43,7 +44,7 @@ module.exports = {
     [
       "@semantic-release/git",
       {
-        assets: ["install.xml", "CHANGELOG.md"],
+        assets: ["src/install.json", "CHANGELOG.md"],
       },
     ],
 

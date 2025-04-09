@@ -1,7 +1,0 @@
-{
-  "baseUrl": "http://localhost:3000",
-  "browser": "electron",
-  "defaultCommandTimeout": 10000,
-  "requestTimeout": 10000,
-  "video": false
-}

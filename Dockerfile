@@ -1,4 +1,4 @@
-FROM php:7.3-apache
+FROM php:8.1-apache
 
 RUN a2enmod rewrite headers
 
@@ -7,15 +7,14 @@ RUN apt-get update && \
 
 RUN set -xe \
     && apt-get update \
-    && apt-get install -y libpng-dev libjpeg-dev libwebp-dev unzip \
+    && apt-get install -y libpng-dev libjpeg62-turbo-dev libwebp-dev libfreetype6-dev unzip \
     && rm -rf /var/lib/apt/lists/* \
-    && docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr \
-    && docker-php-ext-install gd mysqli pdo_mysql zip
+    && docker-php-ext-configure gd --with-jpeg --with-webp --with-freetype \
+    && docker-php-ext-install -j$(nproc) gd mysqli pdo_mysql zip
 
 WORKDIR /var/www/html
 
-ENV OPENCART_VER 3.0.3.6
-ENV OPENCART_MD5 FF9034C333C2F818E0727918C1132F2A
+ENV OPENCART_VER 4.0.2.3
 ENV OPENCART_URL https://github.com/opencart/opencart/releases/download/${OPENCART_VER}/opencart-${OPENCART_VER}.zip
 ENV OPENCART_FILE opencart.zip
 
@@ -28,17 +27,20 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 
 RUN set -xe \
     && curl -sSL ${OPENCART_URL} -o ${OPENCART_FILE} \
-    && echo "${OPENCART_MD5}  ${OPENCART_FILE}" | md5sum -c \
-    && unzip ${OPENCART_FILE} 'upload/*' -d /var/www/html/ \
-    && mv /var/www/html/upload/* /var/www/html/ \
-    && rm -r /var/www/html/upload/ \
+    && unzip ${OPENCART_FILE} \
+    && mv opencart-${OPENCART_VER}/upload/* /var/www/html/ \
+    && rm -rf opencart-${OPENCART_VER} \
+    && rm -rf /var/www/html/upload \
     && mv config-dist.php config.php \
     && mv admin/config-dist.php admin/config.php \
     && rm ${OPENCART_FILE} \
-	&& sed -i 's/MYSQL40//g' install/model/install/install.php \
+    && sed -i 's/MYSQL40//g' install/model/install/install.php \
     && chown -R www-data:www-data /var/www
 
 COPY ./docker/install.sh /var/www/html/install.sh
+COPY ./docker/setup-extension.sh /usr/local/bin/setup-extension.sh
+COPY ./docker/run-setup.php /usr/local/bin/run-setup.php
 RUN chmod u+x /var/www/html/install.sh
+RUN chmod u+x /usr/local/bin/setup-extension.sh
 
 VOLUME ["/var/www/html/"]
