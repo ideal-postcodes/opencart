@@ -28,7 +28,8 @@ describe("Checkout", () => {
     cy.visit("/index.php?route=checkout/checkout");
     cy.wait("@keys");
     cy.get("label").contains("Guest Checkout").click();
-    cy.wait(5000);
+    cy.get("#shipping-address").should("be.visible");
+    cy.wait(1000); // Reduced wait time
   });
 
   postcodeLookupSuite(suite);

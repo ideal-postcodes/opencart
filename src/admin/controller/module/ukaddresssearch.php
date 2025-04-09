@@ -85,6 +85,8 @@ class Ukaddresssearch extends \Opencart\System\Engine\Controller
             'user_token=' . $this->session->data['user_token'] . '&type=module',
             true
         );
+        //LANGUAGE ENTRIES
+        $data['entry_api_key'] = $this->language->get('entry_api_key');
         //LANGUAGES
         $this->load->model('localisation/language');
         $data['languages'] = $this->model_localisation_language->getLanguages();
@@ -116,42 +118,52 @@ class Ukaddresssearch extends \Opencart\System\Engine\Controller
 
     public function install()
     {
-        $this->load->model('setting/setting');
-        $this->model_setting_setting->editSetting('module_ukaddresssearch', [
-            'module_ukaddresssearch_status' => 1,
-            'module_ukaddresssearch_settings' => [
-                'idealpostcodes_enabled' => 0,
-                'idealpostcodes_api_key' => '',
-                'idealpostcodes_autocomplete' => 1,
-                'idealpostcodes_postcodelookup' => 1,
-                'idealpostcodes_populate_organisation' => 1,
-                'idealpostcodes_populate_county' => 1,
-                'idealpostcodes_postcodelookup_override' => '{}',
-                'idealpostcodes_autocomplete_override' => '{}',
-                'idealpostcodes_custom_fields' => '[]'
-            ],
-        ]);
-        
-        // Register event to inject the configuration into the page header
-        $this->load->model('setting/event');
-        $this->model_setting_event->addEvent([
-            'code' => 'ukaddresssearch',
-            'description' => 'Add UK Address Search to pages',
-            'trigger' => 'catalog/view/common/header/after',
-            'action' => 'extension/idealpostcodes/module/ukaddresssearch.injectConfig',
-            'status' => 1,
-            'sort_order' => 0
-        ]);
+        try {
+            $this->load->model('setting/setting');
+            $this->model_setting_setting->editSetting('module_ukaddresssearch', [
+                'module_ukaddresssearch_status' => 1,
+                'module_ukaddresssearch_settings' => [
+                    'idealpostcodes_enabled' => 0,
+                    'idealpostcodes_api_key' => '',
+                    'idealpostcodes_autocomplete' => 1,
+                    'idealpostcodes_postcodelookup' => 1,
+                    'idealpostcodes_populate_organisation' => 1,
+                    'idealpostcodes_populate_county' => 1,
+                    'idealpostcodes_postcodelookup_override' => '{}',
+                    'idealpostcodes_autocomplete_override' => '{}',
+                    'idealpostcodes_custom_fields' => '[]'
+                ],
+            ]);
+            
+            // Register event to inject the configuration into the page header
+            $this->load->model('setting/event');
+            $this->model_setting_event->addEvent([
+                'code' => 'ukaddresssearch',
+                'description' => 'Add UK Address Search to pages',
+                'trigger' => 'catalog/view/common/header/after',
+                'action' => 'extension/idealpostcodes/module/ukaddresssearch.injectConfig',
+                'status' => 1,
+                'sort_order' => 0
+            ]);
+        } catch (\Exception $e) {
+            $this->log->write('Failed to install UK Address Search module: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     public function uninstall()
     {
-        $this->load->model('setting/setting');
-        $this->model_setting_setting->deleteSetting('module_ukaddresssearch');
-        
-        // Remove the event when uninstalling
-        $this->load->model('setting/event');
-        $this->model_setting_event->deleteEventByCode('ukaddresssearch');
+        try {
+            $this->load->model('setting/setting');
+            $this->model_setting_setting->deleteSetting('module_ukaddresssearch');
+            
+            // Remove the event when uninstalling
+            $this->load->model('setting/event');
+            $this->model_setting_event->deleteEventByCode('ukaddresssearch');
+        } catch (\Exception $e) {
+            $this->log->write('Failed to uninstall UK Address Search module: ' . $e->getMessage());
+            throw $e;
+        }
     }
 
     private function setConfig(array $config)

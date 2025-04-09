@@ -30,6 +30,6 @@ sed -i "s#define('DIR_STORAGE', DIR_SYSTEM . 'storage/');#define('DIR_STORAGE', 
 
 # Set proper permissions for the storage directory
 chown -R www-data:www-data /var/storage
-chmod -R 755 /var/storage
+chmod -R 750 /var/storage
 
 echo "Storage directory moved successfully with proper permissions."

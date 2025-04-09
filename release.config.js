@@ -5,6 +5,7 @@ module.exports = {
     "@semantic-release/commit-analyzer",
 
     // "semantic-release-replace-plugin"
+    // "semantic-release-replace-plugin"
     // Replaces version number in readme.txt and uk-address-postcode-validation
     [
       "semantic-release-replace-plugin",
@@ -12,8 +13,8 @@ module.exports = {
         replacements: [
           {
             files: ["src/install.json"],
-            from: "<version>.*</version>",
-            to: "<version>${nextRelease.version}</version>",
+            from: /"version"\s*:\s*".*"/,
+            to: "\"version\": \"${nextRelease.version}\"",
             results: [
               {
                 file: "src/install.json",
@@ -43,7 +44,7 @@ module.exports = {
     [
       "@semantic-release/git",
       {
-        assets: ["install.json", "CHANGELOG.md"],
+        assets: ["src/install.json", "CHANGELOG.md"],
       },
     ],
 

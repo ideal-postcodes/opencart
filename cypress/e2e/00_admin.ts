@@ -1,24 +1,29 @@
 /// <reference types="cypress" />
 // Uncaught exceptions are now handled in support/e2e.ts
 
-const activateExtension = (token:string|null) => {
+const activateExtension = (token: string | null) => {
   //Account
-  cy.visit(`/admin/index.php?route=design/layout.form&user_token=${token}&layout_id=6`);
+  cy.visit(
+    `/admin/index.php?route=design/layout.form&user_token=${token}&layout_id=6`
+  );
   cy.get("#module-content-top").within(() => {
     cy.get("button[title='Add Module']").click();
     cy.get("select").select("idealpostcodes.ukaddresssearch");
   });
-  cy.scrollTo('top');
-  cy.get('button[type="submit"][form="form-layout"]').click({force: true});
+  cy.scrollTo("top");
+  cy.get('button[type="submit"][form="form-layout"]').click({ force: true });
+
   //Checkout
-  cy.visit(`/admin/index.php?route=design/layout.form&user_token=${token}&layout_id=7`);
+  cy.visit(
+    `/admin/index.php?route=design/layout.form&user_token=${token}&layout_id=7`
+  );
   cy.get("#module-content-top").within(() => {
     cy.get("button[title='Add Module']").click();
     cy.get("select").select("idealpostcodes.ukaddresssearch");
   });
-  cy.scrollTo('top');
-  cy.get('button[type="submit"][form="form-layout"]').click({force: true});
-}
+  cy.scrollTo("top");
+  cy.get('button[type="submit"][form="form-layout"]').click({ force: true });
+};
 
 describe("Admin", () => {
   const baseUrl = Cypress.config("baseUrl");
@@ -26,23 +31,21 @@ describe("Admin", () => {
   let token: string|null;
 
   beforeEach(() => {
+    // Skip login if we already have a token
+    if (token) return;
+    
     cy.visit("/admin");
     cy.get("#input-username").type("admin");
     cy.get("#input-password").type("password");
     cy.get("form").contains("Login").click({force:true});
     cy.url().should("include", "/admin/index.php?route=common/dashboard&user_token=");
-  });
-
-  // Get token from URL
-  beforeEach(function() {
-    // Skip if we already have a token
-    if (token) return;
     
+    // Extract token from URL
     cy.url().then(url => {
       const urlObj = new URL(url);
       token = urlObj.searchParams.get("user_token");
     });
-  })
+  });
 
   after(() => activateExtension(token));
 

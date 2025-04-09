@@ -3,9 +3,9 @@
     Object.assign(
         window.idpcConfig, 
         {{ idpcConfig|json_encode() }}, 
-        { postcodeLookupOverride: JSON.parse('{{ postcodeLookupOverride }}') },
-        { autocompleteOverride: JSON.parse('{{ autocompleteOverride }}') },
-        { customFields: JSON.parse('{{ customFields }}') }
+        { postcodeLookupOverride: {{ postcodeLookupOverride|json_encode() }} },
+        { autocompleteOverride: {{ autocompleteOverride|json_encode() }} },
+        { customFields: {{ customFields|json_encode() }} }
     );
 </script>
 <script type="text/javascript" src="{{ absolutePath }}extension/idealpostcodes/catalog/view/javascript/opencart.js"></script>

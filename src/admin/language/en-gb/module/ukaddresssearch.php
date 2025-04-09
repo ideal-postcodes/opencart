@@ -6,7 +6,7 @@ $_["text_extension"] = "Extensions";
 $_["text_success"] = "Success: Ideal Postcodes Address Validation module updated";
 $_["text_edit"] = "Ideal Postcodes UK Address Validation Module";
 // Entry
-$_["api_name"] = "API Key";
+$_["entry_api_key"] = "API Key";
 $_["entry_title"] = "Heading Title";
 $_["entry_status"] = "Status";
 $_["enable_status"] = "Enabled";
