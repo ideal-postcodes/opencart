@@ -77,3 +77,4 @@ test/snapshot/cypress/videos/
 test/snapshot/fixtures/binding.js
 *.mp4
 *.ocmod.zip
+cypress.env.json

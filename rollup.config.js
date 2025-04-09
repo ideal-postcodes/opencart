@@ -1,7 +1,7 @@
 import commonjs from "@rollup/plugin-commonjs";
-//import { terser } from "rollup-plugin-terser";
+import terser from "@rollup/plugin-terser";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
-import ts from "rollup-plugin-ts";
+import typescript from "@rollup/plugin-typescript";
 import json from "@rollup/plugin-json";
 
 const banner = `/**
@@ -26,7 +26,7 @@ export default [
   {
     input: "./lib/index.ts",
     output: {
-      file: "./src/upload/catalog/view/javascript/opencart.js",
+      file: "./src/catalog/view/javascript/opencart.js",
       banner,
       format: "iife",
       exports: "named",
@@ -39,21 +39,15 @@ export default [
         browser: true
       }),
       commonjs(),
-      ts({
-        transpiler: "babel",
-        browserslist: [targets],
-        babelConfig: {
-          presets: [
-            [
-              "@babel/preset-env",
-              {
-                targets
-              },
-            ],
-          ],
-        },
+      typescript({
+        tsconfig: './tsconfig.json',
+        compilerOptions: {
+          target: 'es5',
+          module: 'esnext',
+          lib: ['dom', 'es2015'],
+        }
       }),
-      //terser(terserConfig),
+      terser(terserConfig),
     ],
   },
 ];
