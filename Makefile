@@ -4,39 +4,44 @@
 
 ## Bootstrap containers and compile opencart internals
 .PHONY: bootstrap
-bootstrap: up init
+bootstrap: up init setup-extension
 
 ## Initialise repository - run install-opencart
 .PHONY: init
 init:
-	docker-compose exec -T web dockerize -wait tcp://db:3306 -timeout 60m /var/www/html/install.sh
+	docker compose exec -T web dockerize -wait tcp://db:3306 -timeout 60m /var/www/html/install.sh
 
 ## Launch docker-compose as background daemon
 .PHONY: up
 up:
-	docker-compose up -d
+	docker compose up -d
 
 ## Shut down docker-compose services
 .PHONY: down
 down:
-	docker-compose down
+	docker compose down
 
 ## -- Development Methods --
 
 ## Launch bash shell into opencart container
 .PHONY: shell
 shell:
-	docker-compose exec web bash
+	docker compose exec web bash
+
+## Setup or refresh the extension in the OpenCart installation
+.PHONY: setup-extension
+setup-extension:
+	docker compose exec -T web /usr/local/bin/setup-extension.sh
 
 ## Tail logs
 .PHONY: logs
 logs:
-	docker-compose logs -f
+	docker compose logs -f
 
 ## Tail opencart logs only
 .PHONY: logs-opencart
 logs-opencart:
-	docker-compose logs -f web
+	docker compose logs -f web
 
 ## -- Misc --
 
@@ -49,7 +54,7 @@ update:
 ## Bundle module
 .PHONY: bundle
 bundle:
-	cd src && zip -r -D idealpostcodes.ocmod.zip upload install.xml && mv idealpostcodes.ocmod.zip ../
+	cd src && zip -r -D idealpostcodes.ocmod.zip admin catalog install.json && mv idealpostcodes.ocmod.zip ../
 
 ## How to use this Makefile
 .PHONY: help

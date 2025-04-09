@@ -1,0 +1,158 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="float-end">
+        <button type="submit" form="form-module" data-bs-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa-solid fa-save"></i></button>
+        <a href="{{ cancel }}" data-bs-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-light"><i class="fa-solid fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ol class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li class="breadcrumb-item"><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa-solid fa-circle-exclamation"></i> {{ error_warning }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endif %}
+    <div class="card">
+      <div class="card-header"><i class="fa-solid fa-pencil"></i> {{ text_edit }}</div>
+      <div class="card-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-status">{{ enable_status }}</label>
+            <div class="col-sm-10">
+              <select name="idealpostcodes_enabled" id="input-status" class="form-select">
+                {% if idealpostcodes_enabled %}
+                  <option value="1" selected="selected">{{ text_enabled }}</option>
+                  <option value="0">{{ text_disabled }}</option>
+                {% else %}
+                  <option value="1">{{ text_enabled }}</option>
+                  <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="input-name">{{ api_name }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="idealpostcodes_api_key" value="{{ idealpostcodes_api_key }}" placeholder="{{ api_name }}" id="input-name" class="form-control" />
+              {% if error_api_key %}
+              <div class="text-danger">{{ error_api_key }}</div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="tab-pane">
+            <ul class="nav nav-tabs" id="settings">
+              <li class="nav-item"><a href="#tab-options" data-bs-toggle="tab" class="nav-link active">{{ tabs_options }}</a></li>
+              <li class="nav-item"><a href="#tab-advanced" data-bs-toggle="tab" class="nav-link">{{ tabs_advanced }}</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="tab-options">
+                <!-- Autocomplete -->
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label" for="idealpostcodes_autocomplete">{{ entry_autocomplete }}</label>
+                  <div class="col-sm-10">
+                    <select name="idealpostcodes_autocomplete" id="idealpostcodes_autocomplete" class="form-select">
+                      {% if idealpostcodes_autocomplete %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                      {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                  </div>
+                </div>
+                <!-- Postcode lookup -->
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label" for="idealpostcodes_postcodelookup">{{ entry_postcodelookup }}</label>
+                  <div class="col-sm-10">
+                    <select name="idealpostcodes_postcodelookup" id="idealpostcodes_postcodelookup" class="form-select">
+                      {% if idealpostcodes_postcodelookup %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                      {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                  </div>
+                </div>
+                <!-- Populate organizaction -->
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label" for="idealpostcodes_populate_organisation">{{ entry_organisation }}</label>
+                  <div class="col-sm-10">
+                    <select name="idealpostcodes_populate_organisation" id="idealpostcodes_populate_organisation" class="form-select">
+                      {% if idealpostcodes_populate_organisation %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                      {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                  </div>
+                </div>
+                <!-- Populate county -->
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label" for="idealpostcodes_populate_county">{{ entry_county }}</label>
+                  <div class="col-sm-10">
+                    <select name="idealpostcodes_populate_county" id="idealpostcodes_populate_county" class="form-select">
+                      {% if idealpostcodes_populate_county %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                      {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="tab-advanced">
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label" for="idealpostcodes_postcodelookup_override">{{ entry_postcodelookup_override }}</label>
+                  <div class="col-sm-10">
+                    <textarea name="idealpostcodes_postcodelookup_override" placeholder="{{ entry_postcodelookup_override }}" id="idealpostcodes_postcodelookup_override" class="form-control">{{ idealpostcodes_postcodelookup_override }}</textarea>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label" for="idealpostcodes_autocomplete_override">{{ entry_autocomplete_override }}</label>
+                  <div class="col-sm-10">
+                    <textarea name="idealpostcodes_autocomplete_override" placeholder="{{ entry_autocomplete_override }}" id="idealpostcodes_autocomplete_override" class="form-control">{{ idealpostcodes_autocomplete_override }}</textarea>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label" for="idealpostcodes_custom_fields">{{ entry_custom_fields }}</label>
+                  <div class="col-sm-10">
+                    <textarea name="idealpostcodes_custom_fields" placeholder="[]" id="idealpostcodes_custom_fields" class="form-control">{{ idealpostcodes_custom_fields }}</textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript"><!--
+$(document).ready(function() {
+  // Initialize the first tab using Bootstrap 5 syntax
+  var firstTabEl = document.querySelector('#settings a:first-child');
+  var firstTab = new bootstrap.Tab(firstTabEl);
+  firstTab.show();
+  
+  // Handle tab clicks to update active state
+  $('#settings a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+    // The active class is now managed by Bootstrap 5 automatically
+    // This is just for any additional custom behavior
+  });
+});
+//--></script></div>
+{{ footer }}

@@ -4,15 +4,15 @@ import { setupAutocomplete, setupPostcodeLookup } from "./extension";
 
 export const selectors = {
   line_1: "#input-payment-address-1",
-  line_2: '[name="address_2"]',
-  postcode: '[name="postcode"]',
-  post_town: '[name="city"]',
-  organisation_name: '[name="company"]',
-  county: '[name="zone_id"]',
-  country: '[name="country_id"]',
+  line_2: '#input-payment-address-2',
+  postcode: '#input-payment-postcode',
+  post_town: '#input-payment-city',
+  organisation_name: '#input-payment-company',
+  county_code: '#input-payment-zone',
+  country: '#input-payment-country',
 };
 
-const getScope = (anchor: any) => getParent(anchor, "fieldset", (e) => e.id === "address");
+const getScope = (anchor: any) => getParent(anchor, "fieldset");
 
 export const pageTest = () => window.location.href.includes("/checkout");
 

@@ -45,8 +45,10 @@ export const autocompleteSuite = (suite: Suite) => {
   const address = suite.address;
 
   it("Autocomplete", () => {
-    cy.get(scope).within((scope) => {
+    cy.get(scope).within(($scope) => {
+    const scope = $scope;
       cy.get(selectors.country).select("222");
+      cy.wait(1000);
       cy.get(selectors.line_1)
         .clear({
           force: true,
@@ -67,8 +69,10 @@ export const postcodeLookupSuite = (suite: Suite) => {
   const address = suite.address;
 
   it("Postcode Lookup", () => {
-    cy.get(scope).within((scope) => {
+    cy.get(scope).within(($scope) => {
+    const scope = $scope;
       cy.get(selectors.country).select("222");
+      cy.wait(1000);
       cy.get(".idpc_lookup input.form-control")
         .clear({
           force: true,

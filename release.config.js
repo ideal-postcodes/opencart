@@ -4,10 +4,10 @@ module.exports = {
     // analyzeCommits: Determine the type of release by analyzing commits with conventional-changelog
     "@semantic-release/commit-analyzer",
 
-    // "@google/semantic-release-replace-plugin"
+    // "semantic-release-replace-plugin"
     // Replaces version number in readme.txt and uk-address-postcode-validation
     [
-      "@google/semantic-release-replace-plugin",
+      "semantic-release-replace-plugin",
       {
         replacements: [
           {
