@@ -11,12 +11,12 @@ module.exports = {
       {
         replacements: [
           {
-            files: ["src/install.xml"],
+            files: ["src/install.json"],
             from: "<version>.*</version>",
             to: "<version>${nextRelease.version}</version>",
             results: [
               {
-                file: "src/install.xml",
+                file: "src/install.json",
                 hasChanged: true,
                 numMatches: 1,
                 numReplacements: 1,
@@ -43,7 +43,7 @@ module.exports = {
     [
       "@semantic-release/git",
       {
-        assets: ["install.xml", "CHANGELOG.md"],
+        assets: ["install.json", "CHANGELOG.md"],
       },
     ],
 
