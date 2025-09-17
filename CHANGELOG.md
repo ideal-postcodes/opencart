@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/ideal-postcodes/opencart/compare/2.0.0...2.0.1) (2025-09-17)
+
+
+### Bug Fixes
+
+* **axios:** bump [@ideal-postcodes](https://github.com/ideal-postcodes) packages to 5.2.6 and 3.1.6 ([71f2ec3](https://github.com/ideal-postcodes/opencart/commit/71f2ec3afca50251ef02bcb7d21b2fd038ca4bec))
+
 # [2.0.0](https://github.com/ideal-postcodes/opencart/compare/1.1.0...2.0.0) (2025-07-24)
 
 
