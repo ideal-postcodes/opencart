@@ -31,6 +31,20 @@ See our [guide](https://ideal-postcodes.co.uk/guides/opencart) for installation 
 
 ![Configuration](https://img.ideal-postcodes.co.uk/opencart-config.png)
 
+## Development
+
+### CI
+
+This project uses [Blacksmith](https://blacksmith.sh/) runners for faster CI builds. Fork contributors should note that Blacksmith runners require organization configuration — CI will fall back to standard GitHub-hosted runners if unavailable.
+
+### Testing
+
+```bash
+npm run playwright        # Run tests
+npm run playwright:ui     # Interactive UI mode
+npm run playwright:headed # Headed browser mode
+```
+
 ## Licence
 
 MIT

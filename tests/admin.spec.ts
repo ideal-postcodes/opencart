@@ -31,7 +31,8 @@ test.describe('Admin', () => {
     await page.goto(`/admin/index.php?route=marketplace/extension&user_token=${token}`);
     await page.locator('select[name="type"]').selectOption(`${baseURL}/admin/index.php?route=extension/module&user_token=${token}`);
     // Wait for extension list to load after type selection
-    const extensionLink = page.locator(`a[href="${baseURL}/admin/index.php?route=extension/idealpostcodes/module/ukaddresssearch&user_token=${token}"]`);
+    // Use suffix selector to handle both relative and absolute hrefs
+    const extensionLink = page.locator(`a[href$="route=extension/idealpostcodes/module/ukaddresssearch&user_token=${token}"]`);
     await expect(extensionLink).toBeVisible();
     await extensionLink.click();
 
@@ -51,8 +52,8 @@ test.describe('Admin', () => {
     await page.locator('button.btn.btn-primary[title="Save"]').click();
 
     // Wait for redirect to complete and navigate back to config
-    await expect(page.locator(`a[href="${baseURL}/admin/index.php?route=extension/idealpostcodes/module/ukaddresssearch&user_token=${token}"]`)).toBeVisible({ timeout: 10000 });
-    await page.locator(`a[href="${baseURL}/admin/index.php?route=extension/idealpostcodes/module/ukaddresssearch&user_token=${token}"]`).click();
+    await expect(extensionLink).toBeVisible({ timeout: 10000 });
+    await extensionLink.click();
 
     // Verify the configuration values
     await page.locator('ul.nav-tabs a:has-text("Advanced")').click();

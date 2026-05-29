@@ -2,6 +2,10 @@ import { Page, expect, Locator } from '@playwright/test';
 import { Selectors } from '@ideal-postcodes/jsutil';
 import { Address } from '@ideal-postcodes/api-typings';
 
+// OpenCart country IDs from default seed data (oc_country table)
+export const COUNTRY_UK = '222';      // United Kingdom
+export const COUNTRY_JERSEY = '257';  // Jersey (Crown dependency, uses UK postcodes)
+
 export interface Suite {
   scope: string;
   selectors: Selectors;
@@ -39,7 +43,7 @@ const assertions = async (
     await expect(scope.locator(selectors.organisation)).toHaveValue(address.organisation_name);
   }
   await expect(scope.locator(selectors.post_town)).toHaveValue(normalizeCity(address.post_town));
-  await expect(scope.locator(selectors.country)).toHaveValue('257');
+  await expect(scope.locator(selectors.country)).toHaveValue(COUNTRY_JERSEY);
   await expect(scope.locator(selectors.postcode)).toHaveValue(address.postcode);
 };
 
@@ -47,8 +51,8 @@ export const runAutocompleteSuite = async (page: Page, suite: Suite) => {
   const { scope: scopeSelector, selectors, address } = suite;
   const scope = page.locator(scopeSelector);
 
-  await scope.locator(selectors.country).selectOption('222');
-  await expect(scope.locator(selectors.country)).toHaveValue('222');
+  await scope.locator(selectors.country).selectOption(COUNTRY_UK);
+  await expect(scope.locator(selectors.country)).toHaveValue(COUNTRY_UK);
   
   await scope.locator(selectors.line_1).clear();
   await scope.locator(selectors.line_1).fill(address.line_1);
@@ -63,8 +67,8 @@ export const runPostcodeLookupSuite = async (page: Page, suite: Suite) => {
   const { scope: scopeSelector, selectors, address } = suite;
   const scope = page.locator(scopeSelector);
 
-  await scope.locator(selectors.country).selectOption('222');
-  await expect(scope.locator(selectors.country)).toHaveValue('222');
+  await scope.locator(selectors.country).selectOption(COUNTRY_UK);
+  await expect(scope.locator(selectors.country)).toHaveValue(COUNTRY_UK);
   
   await scope.locator('.idpc_lookup input.form-control').clear();
   await scope.locator('.idpc_lookup input.form-control').fill(address.postcode);
