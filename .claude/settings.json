@@ -1,0 +1,5 @@
+{
+  "projectType": "opencart-extension",
+  "language": "typescript",
+  "framework": "opencart4"
+}

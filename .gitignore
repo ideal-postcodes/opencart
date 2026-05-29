@@ -78,3 +78,8 @@ test/snapshot/fixtures/binding.js
 *.mp4
 *.ocmod.zip
 cypress.env.json
+
+# AI assistant local settings
+.claude/settings.local.json
+.claude/plans/
+.windsurf/

@@ -45,11 +45,11 @@ logs-opencart:
 
 ## -- Misc --
 
-## Update repository against origin/master
+## Update repository against origin/main
 .PHONY: update
 update:
 	git fetch
-	git merge --ff-only origin/master
+	git merge --ff-only origin/main
 
 ## Bundle module
 .PHONY: bundle
