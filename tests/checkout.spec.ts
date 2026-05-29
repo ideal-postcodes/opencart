@@ -21,8 +21,8 @@ test.describe('Checkout', () => {
     await page.locator('label').filter({ hasText: 'Guest Checkout' }).click();
     await expect(page.locator('#shipping-address')).toBeVisible();
     
-    // Wait for extension JS to initialize (if loaded)
-    await page.waitForTimeout(2000);
+    // Wait for extension widget to be injected into DOM (hidden until UK selected)
+    await expect(page.locator('#shipping-address .idpc_lookup')).toBeAttached({ timeout: 15000 });
   });
 
   test('Postcode Lookup', async ({ page }) => {
