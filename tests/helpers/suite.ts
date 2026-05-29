@@ -48,10 +48,13 @@ export const runAutocompleteSuite = async (page: Page, suite: Suite) => {
   const scope = page.locator(scopeSelector);
 
   await scope.locator(selectors.country).selectOption('222');
-  await page.waitForTimeout(1000);
+  await expect(scope.locator(selectors.country)).toHaveValue('222');
+  
   await scope.locator(selectors.line_1).clear();
   await scope.locator(selectors.line_1).fill(address.line_1);
-  await page.waitForTimeout(2000);
+  
+  // Wait for autocomplete dropdown (includes debounce + API call + render)
+  await expect(page.locator('.idpc_ul li').first()).toBeVisible({ timeout: 15000 });
   await page.locator('.idpc_ul li').first().click();
   await assertions(scope, selectors, address);
 };
@@ -61,11 +64,14 @@ export const runPostcodeLookupSuite = async (page: Page, suite: Suite) => {
   const scope = page.locator(scopeSelector);
 
   await scope.locator(selectors.country).selectOption('222');
-  await page.waitForTimeout(1000);
+  await expect(scope.locator(selectors.country)).toHaveValue('222');
+  
   await scope.locator('.idpc_lookup input.form-control').clear();
   await scope.locator('.idpc_lookup input.form-control').fill(address.postcode);
   await scope.locator('.idpc-button').click();
-  await page.waitForTimeout(1000);
+  
+  // Wait for address dropdown (includes API call + render)
+  await expect(scope.locator('.idpc-select-container select')).toBeVisible({ timeout: 15000 });
   await scope.locator('.idpc-select-container select').selectOption('0');
   await assertions(scope, selectors, address);
 };

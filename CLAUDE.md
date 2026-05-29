@@ -36,5 +36,5 @@ docker/        # Docker setup scripts
 ## Skills
 
 - `/build` - Build and bundle the extension
-- `/test` - Run Cypress tests
+- `/test` - Run Playwright tests
 - `/release` - Semantic release process

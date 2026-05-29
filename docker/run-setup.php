@@ -321,6 +321,34 @@ function callModuleInstall(string $fullModulePath): void {
     
     $loader->controller($fullModulePath . '|install');
     echo "install() method executed.\n";
+    
+    // Register the event directly here as backup (in case install() event registration fails)
+    registerEvent();
+}
+
+function registerEvent(): void {
+    global $registry;
+    $db = $registry->get('db');
+    
+    echo "Registering ukaddresssearch event...\n";
+    
+    // Check if event already exists
+    $query = $db->query("SELECT * FROM `" . DB_PREFIX . "event` WHERE `code` = 'ukaddresssearch'");
+    
+    if (!$query->num_rows) {
+        $db->query("INSERT INTO `" . DB_PREFIX . "event` SET 
+            `code` = 'ukaddresssearch',
+            `description` = 'Add UK Address Search to pages',
+            `trigger` = 'catalog/view/common/header/after',
+            `action` = 'extension/idealpostcodes/module/ukaddresssearch.injectConfig',
+            `status` = '1',
+            `sort_order` = '0'
+        ");
+        $eventId = $db->getLastId();
+        echo "Event registered with ID: {$eventId}\n";
+    } else {
+        echo "Event already exists with ID: {$query->row['event_id']}\n";
+    }
 }
 
 function enableModule(string $moduleType, string $moduleCode): void {

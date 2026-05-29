@@ -5,8 +5,7 @@ module.exports = {
     // analyzeCommits: Determine the type of release by analyzing commits with conventional-changelog
     "@semantic-release/commit-analyzer",
 
-    // "semantic-release-replace-plugin"
-    // "semantic-release-replace-plugin"
+    // semantic-release-replace-plugin
     // Replaces version number in readme.txt and uk-address-postcode-validation
     [
       "semantic-release-replace-plugin",
@@ -59,7 +58,7 @@ module.exports = {
       {
         assets: [
           {
-            path: ["idealpostcodes.ocmod.zip"],
+            path: "idealpostcodes.ocmod.zip",
             label: "Ideal Postcodes Open Cart Module ${nextRelease.version}"
           },
         ],

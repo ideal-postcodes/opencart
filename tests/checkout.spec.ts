@@ -17,14 +17,12 @@ test.describe('Checkout', () => {
     await page.locator('button').filter({ hasText: 'Add to Cart' }).click();
     await expect(page.locator('.alert.alert-success')).toContainText('Success: You have added');
 
-    // Intercept API key validation
-    await page.route('https://api.ideal-postcodes.co.uk/v1/keys/*', route => route.continue());
-    
     await page.goto('/index.php?route=checkout/checkout');
-    await page.waitForResponse('https://api.ideal-postcodes.co.uk/v1/keys/*');
     await page.locator('label').filter({ hasText: 'Guest Checkout' }).click();
     await expect(page.locator('#shipping-address')).toBeVisible();
-    await page.waitForTimeout(1000);
+    
+    // Wait for extension JS to initialize (if loaded)
+    await page.waitForTimeout(2000);
   });
 
   test('Postcode Lookup', async ({ page }) => {

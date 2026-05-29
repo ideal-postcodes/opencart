@@ -59,7 +59,7 @@
     "@semantic-release/github": "~9.2.6",
     "@semantic-release/release-notes-generator": "~12.1.0",
     "core-js": "~3.36.0",
-    "dotenv": "^17.4.2",
+    "dotenv": "~16.4.5",
     "prettier": "~3.2.5",
     "rollup": "~4.37.0",
     "semantic-release": "~22.0.12",
