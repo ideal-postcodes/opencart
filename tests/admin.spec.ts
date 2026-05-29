@@ -7,8 +7,7 @@ if (!process.env.API_KEY) {
 
 test.describe('Admin', () => {
   const apiKey = process.env.API_KEY!;
-  // Module-scoped token works because workers:1 and fullyParallel:false.
-  // If parallelism is enabled, convert to a worker-scoped fixture.
+  // Module-scoped token requires sequential execution (enforced in playwright.config.ts)
   let token: string;
 
   test.beforeEach(async ({ page, baseURL }) => {

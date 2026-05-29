@@ -31,7 +31,7 @@ docker/        # Docker setup scripts
 - **OpenCart 4 namespaces**: `Opencart\Admin\Controller\Extension\idealpostcodes\Module`
 - **Language keys**: Use `entry_*` prefix for form fields, `text_*` for labels
 - **Error handling**: Wrap install/uninstall in try-catch with logging
-- **Security**: Use Twig's `json_encode()` filter for JS data (it's interpolated as object literals inside `<script>`, so must be escape-safe to prevent XSS)
+- **Security**: For JS data in templates, output as object literals using `{{ data|json_encode }}` (not inside strings). Avoid `JSON.parse('{{ data }}')` which is XSS-vulnerable.
 
 ## Skills
 

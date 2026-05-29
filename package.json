@@ -27,7 +27,7 @@
     "playwright": "playwright test",
     "playwright:ui": "playwright test --ui",
     "playwright:headed": "playwright test --headed",
-    "test": "npm start && npm run playwright && make down",
+    "test": "npm start && (npm run playwright; status=$?; make down; exit $status)",
     "test:open": "npm start && npm run playwright:ui"
   },
   "license": "MIT",

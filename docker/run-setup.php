@@ -347,22 +347,27 @@ function registerEvent(): void {
     
     echo "Registering ukaddresssearch event...\n";
     
-    // Check if event already exists
-    $query = $db->query("SELECT * FROM `" . DB_PREFIX . "event` WHERE `code` = 'ukaddresssearch'");
-    
-    if (!$query->num_rows) {
-        $db->query("INSERT INTO `" . DB_PREFIX . "event` SET 
-            `code` = 'ukaddresssearch',
-            `description` = 'Add UK Address Search to pages',
-            `trigger` = 'catalog/view/common/header/after',
-            `action` = 'extension/idealpostcodes/module/ukaddresssearch.injectConfig',
-            `status` = '1',
-            `sort_order` = '0'
-        ");
-        $eventId = $db->getLastId();
-        echo "Event registered with ID: {$eventId}\n";
-    } else {
-        echo "Event already exists with ID: {$query->row['event_id']}\n";
+    try {
+        // Check if event already exists
+        $query = $db->query("SELECT * FROM `" . DB_PREFIX . "event` WHERE `code` = 'ukaddresssearch'");
+        
+        if (!$query->num_rows) {
+            $db->query("INSERT INTO `" . DB_PREFIX . "event` SET 
+                `code` = 'ukaddresssearch',
+                `description` = 'Add UK Address Search to pages',
+                `trigger` = 'catalog/view/common/header/after',
+                `action` = 'extension/idealpostcodes/module/ukaddresssearch.injectConfig',
+                `status` = '1',
+                `sort_order` = '0'
+            ");
+            $eventId = $db->getLastId();
+            echo "Event registered with ID: {$eventId}\n";
+        } else {
+            echo "Event already exists with ID: {$query->row['event_id']}\n";
+        }
+    } catch (\Exception $e) {
+        echo "ERROR: Failed to register event: " . $e->getMessage() . "\n";
+        throw $e;
     }
 }
 
