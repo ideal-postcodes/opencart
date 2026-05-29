@@ -10,7 +10,7 @@ UK Address Search and Validation extension for OpenCart 4.x. Integrates `@ideal-
 | `npm run watch` | Watch mode for development |
 | `make bootstrap` | Start dev environment |
 | `make down` | Stop containers |
-| `make bundle` | Create .ocmod.zip |
+| `make bundle` | Create .ocmod.zip (run `npm run build` first) |
 | `npm test` | Run full test suite |
 | `npm run cypress:open` | Open Cypress GUI |
 
@@ -31,7 +31,7 @@ docker/        # Docker setup scripts
 - **OpenCart 4 namespaces**: `Opencart\Admin\Controller\Extension\idealpostcodes\Module`
 - **Language keys**: Use `entry_*` prefix for form fields, `text_*` for labels
 - **Error handling**: Wrap install/uninstall in try-catch with logging
-- **Security**: Use Twig's `json_encode()` filter for JS data, never raw `JSON.parse()`
+- **Security**: Use Twig's `json_encode()` filter for JS data (it's interpolated as object literals inside `<script>`, so must be escape-safe to prevent XSS)
 
 ## Skills
 
