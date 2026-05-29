@@ -1,9 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
-import path from 'path';
 
-// Load .env file
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+// Load .env file (relative path works since Playwright runs from project root)
+dotenv.config({ path: '.env' });
 
 export default defineConfig({
   testDir: './tests',

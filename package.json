@@ -31,6 +31,9 @@
     "test:open": "npm start && npm run playwright:ui"
   },
   "license": "MIT",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "dependencies": {
     "@ideal-postcodes/address-finder": "~5.2.6",
     "@ideal-postcodes/postcode-lookup": "~3.1.6"

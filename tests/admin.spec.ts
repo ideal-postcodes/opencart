@@ -21,7 +21,9 @@ test.describe('Admin', () => {
     await expect(page).toHaveURL(/\/admin\/index\.php\?route=common\/dashboard&user_token=/);
 
     const url = new URL(page.url());
-    token = url.searchParams.get('user_token') || '';
+    const t = url.searchParams.get('user_token');
+    if (!t) throw new Error('user_token missing from admin URL');
+    token = t;
   });
 
 

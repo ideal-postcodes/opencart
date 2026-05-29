@@ -326,6 +326,21 @@ function callModuleInstall(string $fullModulePath): void {
     registerEvent();
 }
 
+/**
+ * Register the ukaddresssearch event directly in the database.
+ * 
+ * Why this workaround exists:
+ * When install() is called via $loader->controller() in this bootstrap script,
+ * the event model's addEvent() silently fails - likely due to incomplete framework
+ * initialization when running outside the normal admin request lifecycle.
+ * 
+ * This does NOT mask a production bug: real installations through the OpenCart
+ * admin UI have the full framework context and install() works correctly there.
+ * This workaround is specific to the automated test bootstrap process.
+ * 
+ * Important: Keep the event parameters in sync with install() in:
+ * src/admin/controller/module/ukaddresssearch.php
+ */
 function registerEvent(): void {
     global $registry;
     $db = $registry->get('db');

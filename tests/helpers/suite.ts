@@ -22,17 +22,17 @@ const assertions = async (
   
   const line3Exists = selectors.line_3 && await scope.locator(selectors.line_3).count() > 0;
   
+  // Invariant: selectors.line_2 must be set if we're checking address lines.
+  // If line_3 exists, check line_2 and line_3 separately; otherwise line_2 holds combined value.
   if (line3Exists) {
     if (selectors.line_2) {
       await expect(scope.locator(selectors.line_2)).toHaveValue(address.line_2);
     }
-    if (selectors.line_3) {
-      await expect(scope.locator(selectors.line_3)).toHaveValue(address.line_3);
-    }
-  } else {
-    if (selectors.line_2) {
-      await expect(scope.locator(selectors.line_2)).toHaveValue(`${address.line_2}, ${address.line_3}`);
-    }
+    // selectors.line_3 is guaranteed truthy here (checked in line3Exists condition)
+    await expect(scope.locator(selectors.line_3!)).toHaveValue(address.line_3);
+  } else if (selectors.line_2) {
+    // No line_3 field: line_2 contains combined "line_2, line_3" value
+    await expect(scope.locator(selectors.line_2)).toHaveValue(`${address.line_2}, ${address.line_3}`);
   }
 
   if (selectors.organisation) {
