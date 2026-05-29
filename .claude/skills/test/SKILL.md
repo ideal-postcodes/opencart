@@ -1,6 +1,6 @@
 ---
 name: test
-description: Run tests for the OpenCart extension. Use when running Cypress e2e tests or validating the extension.
+description: Run tests for the OpenCart extension. Use when running Playwright e2e tests or validating the extension.
 ---
 
 # Test OpenCart Extension
@@ -8,14 +8,17 @@ description: Run tests for the OpenCart extension. Use when running Cypress e2e 
 ## Test Commands
 
 ```bash
-# Full test suite (bootstrap + cypress + cleanup)
+# Full test suite (bootstrap + playwright + cleanup)
 npm test
 
-# Open Cypress interactively
-npm run test:open
+# Open Playwright UI
+npm run playwright:ui
 
-# Run Cypress only (requires running container)
-npm run cypress
+# Run Playwright only (requires running container)
+npm run playwright
+
+# Run headed (visible browser)
+npm run playwright:headed
 ```
 
 ## Test Environment
@@ -44,7 +47,7 @@ make down      # Stop and remove containers
 
 ## Key Files
 
-- `cypress/` - Cypress test files
-- `cypress.config.ts` - Cypress configuration
+- `tests/` - Playwright test files
+- `playwright.config.ts` - Playwright configuration
 - `docker-compose.yml` - Container setup
 - `Dockerfile` - OpenCart container definition

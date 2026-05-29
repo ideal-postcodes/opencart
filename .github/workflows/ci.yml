@@ -26,7 +26,10 @@ jobs:
       - name: Launch OpenCart test environment
         run: make bootstrap
 
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: npm run playwright
         env:
-          CYPRESS_API_KEY: ${{ secrets.API_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}

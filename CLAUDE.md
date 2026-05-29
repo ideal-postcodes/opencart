@@ -12,7 +12,7 @@ UK Address Search and Validation extension for OpenCart 4.x. Integrates `@ideal-
 | `make down` | Stop containers |
 | `make bundle` | Create .ocmod.zip (run `npm run build` first) |
 | `npm test` | Run full test suite |
-| `npm run cypress:open` | Open Cypress GUI |
+| `npm run playwright:ui` | Open Playwright UI |
 
 ## Project Structure
 
@@ -22,7 +22,7 @@ src/
 ├── admin/     # Admin panel (controller, language, view)
 ├── catalog/   # Storefront (controller, language, model, view, JS)
 └── install.json
-cypress/       # E2E tests
+tests/         # Playwright E2E tests
 docker/        # Docker setup scripts
 ```
 
