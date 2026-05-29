@@ -58,8 +58,10 @@ export const runAutocompleteSuite = async (page: Page, suite: Suite) => {
   await scope.locator(selectors.line_1).fill(address.line_1);
   
   // Wait for autocomplete dropdown (includes debounce + API call + render)
-  await expect(page.locator('.idpc_ul li').first()).toBeVisible({ timeout: 15000 });
-  await page.locator('.idpc_ul li').first().click();
+  // Scope to page level since dropdown may render outside the address fieldset
+  const dropdown = page.locator('.idpc_ul li').first();
+  await expect(dropdown).toBeVisible({ timeout: 15000 });
+  await dropdown.click();
   await assertions(scope, selectors, address);
 };
 

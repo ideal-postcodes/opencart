@@ -7,10 +7,10 @@ if (!process.env.API_KEY) {
 
 test.describe('Admin', () => {
   const apiKey = process.env.API_KEY!;
-  // Module-scoped token requires sequential execution (enforced in playwright.config.ts)
+  // Token requires sequential execution (enforced in playwright.config.ts)
   let token: string;
 
-  test.beforeEach(async ({ page, baseURL }) => {
+  test.beforeEach(async ({ page }) => {
     if (token) return;
 
     await page.goto('/admin');
@@ -25,11 +25,9 @@ test.describe('Admin', () => {
     token = t;
   });
 
-
   test('Can navigate to config page', async ({ page, baseURL }) => {
     await page.goto(`/admin/index.php?route=marketplace/extension&user_token=${token}`);
     await page.locator('select[name="type"]').selectOption(`${baseURL}/admin/index.php?route=extension/module&user_token=${token}`);
-    // Wait for extension list to load after type selection
     // Use suffix selector to handle both relative and absolute hrefs
     const extensionLink = page.locator(`a[href$="route=extension/idealpostcodes/module/ukaddresssearch&user_token=${token}"]`);
     await expect(extensionLink).toBeVisible();
@@ -47,14 +45,14 @@ test.describe('Admin', () => {
     await page.locator('textarea[name="idealpostcodes_autocomplete_override"]').clear();
     await page.locator('textarea[name="idealpostcodes_autocomplete_override"]').fill('{ "defaultCountry": "GBR", "detectCountry": false }');
 
-    // Save configuration - this redirects back to extension list
+    // Save configuration - redirects to extension list on success
     await page.locator('button.btn.btn-primary[title="Save"]').click();
-
-    // Wait for redirect to complete and navigate back to config
-    await expect(extensionLink).toBeVisible({ timeout: 10000 });
+    
+    // Wait for redirect to extension list (confirms save succeeded)
+    await page.waitForURL(/route=marketplace\/extension/, { timeout: 10000 });
+    
+    // Navigate back to config and verify
     await extensionLink.click();
-
-    // Verify the configuration values
     await page.locator('ul.nav-tabs a:has-text("Advanced")').click();
     await expect(page.locator('textarea[name="idealpostcodes_autocomplete_override"]')).toHaveValue('{ "defaultCountry": "GBR", "detectCountry": false }');
   });

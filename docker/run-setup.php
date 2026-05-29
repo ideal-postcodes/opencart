@@ -347,23 +347,55 @@ function registerEvent(): void {
     
     echo "Registering ukaddresssearch event...\n";
     
+    // Expected values - keep in sync with install() in ukaddresssearch.php
+    $expected = [
+        'description' => 'Add UK Address Search to pages',
+        'trigger'     => 'catalog/view/common/header/after',
+        'action'      => 'extension/idealpostcodes/module/ukaddresssearch.injectConfig',
+        'status'      => '1',
+        'sort_order'  => '0'
+    ];
+    
     try {
-        // Check if event already exists
         $query = $db->query("SELECT * FROM `" . DB_PREFIX . "event` WHERE `code` = 'ukaddresssearch'");
         
         if (!$query->num_rows) {
+            // No existing row - insert
             $db->query("INSERT INTO `" . DB_PREFIX . "event` SET 
                 `code` = 'ukaddresssearch',
-                `description` = 'Add UK Address Search to pages',
-                `trigger` = 'catalog/view/common/header/after',
-                `action` = 'extension/idealpostcodes/module/ukaddresssearch.injectConfig',
-                `status` = '1',
-                `sort_order` = '0'
+                `description` = '" . $db->escape($expected['description']) . "',
+                `trigger` = '" . $db->escape($expected['trigger']) . "',
+                `action` = '" . $db->escape($expected['action']) . "',
+                `status` = '" . $db->escape($expected['status']) . "',
+                `sort_order` = '" . $db->escape($expected['sort_order']) . "'
             ");
             $eventId = $db->getLastId();
-            echo "Event registered with ID: {$eventId}\n";
+            echo "Event INSERTED with ID: {$eventId}\n";
         } else {
-            echo "Event already exists with ID: {$query->row['event_id']}\n";
+            // Row exists - check if values match
+            $row = $query->row;
+            $needsUpdate = false;
+            
+            foreach ($expected as $field => $value) {
+                if ((string)$row[$field] !== (string)$value) {
+                    $needsUpdate = true;
+                    break;
+                }
+            }
+            
+            if ($needsUpdate) {
+                $db->query("UPDATE `" . DB_PREFIX . "event` SET 
+                    `description` = '" . $db->escape($expected['description']) . "',
+                    `trigger` = '" . $db->escape($expected['trigger']) . "',
+                    `action` = '" . $db->escape($expected['action']) . "',
+                    `status` = '" . $db->escape($expected['status']) . "',
+                    `sort_order` = '" . $db->escape($expected['sort_order']) . "'
+                    WHERE `event_id` = '" . (int)$row['event_id'] . "'
+                ");
+                echo "Event UPDATED (ID: {$row['event_id']})\n";
+            } else {
+                echo "Event unchanged (ID: {$row['event_id']})\n";
+            }
         }
     } catch (\Exception $e) {
         echo "ERROR: Failed to register event: " . $e->getMessage() . "\n";

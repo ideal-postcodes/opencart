@@ -6,7 +6,7 @@
 
 This extension enables [Ideal-Postcodes.co.uk](https://ideal-postcodes.co.uk) address validation for UK addresses on a OpenCart store.
 
-Tested on OpenCart 3.0.3.x
+Tested on OpenCart 4.x
 
 ![CI](https://github.com/ideal-postcodes/opencart/workflows/CI/badge.svg)
 

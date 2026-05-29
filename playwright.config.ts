@@ -6,20 +6,13 @@ dotenv.config({ path: '.env' });
 
 // Tests share a single OpenCart instance and admin token across specs.
 // This requires sequential execution - parallel workers would corrupt shared state.
-const WORKERS = 1;
-const FULLY_PARALLEL = false;
-
-// Enforce at config level: fail fast if these constraints are accidentally changed
-if (process.env.PW_WORKERS && parseInt(process.env.PW_WORKERS) > 1) {
-  throw new Error('Parallel workers not supported: tests share admin token and OpenCart state');
-}
-
+// DO NOT increase workers without converting to isolated test containers.
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: FULLY_PARALLEL,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: WORKERS,
+  workers: 1,
   reporter: 'html',
   use: {
     baseURL: 'http://localhost:3000',
