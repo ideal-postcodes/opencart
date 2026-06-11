@@ -17,6 +17,10 @@ import { watch } from "@ideal-postcodes/postcode-lookup";
 
 type SupportedCountry = string;
 
+const tags = ["opencart"];
+const postcodeLookupTags = [...tags, "postcodelookup"];
+const addressFinderTags = [...tags, "addressfinder"].join(",");
+
 const SUPPORTED_COUNTRIES: SupportedCountry[] = [
   "England",
   "Scotland",
@@ -147,6 +151,7 @@ export const setupShippingPostcodeLookup = (
   watch({
     context: "div.idpc_lookup",
     apiKey: config.apiKey,
+    tags: postcodeLookupTags,
     inputClass: "form-control",
     buttonClass: "btn btn-primary idpc-button",
     selectClass: "form-select",
@@ -201,6 +206,7 @@ export const setupPostcodeLookup = (config: Config, targets: OutputFields, pageT
   watch({
     context: "div.idpc_lookup",
     apiKey: config.apiKey,
+    tags: postcodeLookupTags,
     inputClass: "form-control",
     buttonClass: "btn btn-primary idpc-button",
     selectClass: "form-select",
@@ -257,6 +263,8 @@ export const setupAutocomplete = (config: Config, targets: OutputFields, pageTes
   return AddressFinder.watch({
     apiKey: config.apiKey,
     checkKey: true,
+    queryOptions: { tags: addressFinderTags },
+    resolveOptions: { tags: addressFinderTags },
     populateOrganisation: true,
     removeOrganisation: false,
     outputFields: targets,
